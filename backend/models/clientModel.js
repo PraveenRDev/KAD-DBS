@@ -10,7 +10,11 @@ const clientSchema = mongoose.Schema(
 			type: String,
 			default: null,
 		},
-        companyName: {
+		email: {
+			type: String,
+			default: null,
+		},
+		companyName: {
 			type: String,
 			default: null,
 		},

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-const jobSchema = mongoose.Schema(
+const dataDumpSchema = mongoose.Schema(
 	{
 		serialNumber: {
 			type: Number,
@@ -65,10 +65,21 @@ const jobSchema = mongoose.Schema(
 			type: String,
 			default: null,
 		},
-		client: {
-			type: mongoose.Schema.Types.ObjectId,
-			required: true,
-			ref: 'Client',
+		clientName: {
+			type: String,
+			default: null,
+		},
+		phoneNo: {
+			type: String,
+			default: null,
+		},
+		email: {
+			type: String,
+			default: null,
+		},
+		companyName: {
+			type: String,
+			default: null,
 		},
 		originalFileName: {
 			type: String,
@@ -78,20 +89,12 @@ const jobSchema = mongoose.Schema(
 			type: String,
 			default: null,
 		},
-		startedDate: {
-			type: Date,
-			default: null,
-		},
-		endDate: {
-			type: Date,
-			default: null,
-		},
 	},
 	{
 		timestamps: true,
 	}
 )
 
-const Job = mongoose.model('Job', jobSchema)
+const DataDump = mongoose.model('DataDump', dataDumpSchema)
 
-export default Job
+export default DataDump
