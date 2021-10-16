@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import axios from 'axios'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
@@ -7,7 +8,9 @@ import FormContainer from '../../../components/UI/FormContainer'
 import Loader from '../../../components/UI/Loader'
 import Message from '../../../components/UI/Message'
 
-const Register = () => {
+const Register = ({ userDetails = null }) => {
+	const history = useHistory()
+
 	const [loading, setLoading] = useState(false)
 	const [message, setMessage] = useState(null)
 
@@ -15,6 +18,13 @@ const Register = () => {
 	const [password, setPassword] = useState('')
 	const [isAdmin, setIsAdmin] = useState(false)
 	const [validated, setValidated] = useState(false)
+
+	useEffect(() => {
+		if (userDetails && !userDetails.isAdmin) {
+			history.push('/')
+		}
+		// eslint-disable-next-line
+	}, [userDetails])
 
 	const submitHandler = async (e) => {
 		e.preventDefault()
@@ -60,6 +70,7 @@ const Register = () => {
 							value={username}
 							onChange={(e) => setUsername(e.target.value)}
 							required
+							autoComplete='off'
 						></Form.Control>
 						<Form.Control.Feedback type='invalid'>Please provide a valid username.</Form.Control.Feedback>
 					</Form.Group>
@@ -73,6 +84,7 @@ const Register = () => {
 							value={password}
 							onChange={(e) => setPassword(e.target.value)}
 							required
+							autoComplete='off'
 						></Form.Control>
 						<Form.Control.Feedback type='invalid'>Please provide a valid password.</Form.Control.Feedback>
 					</Form.Group>

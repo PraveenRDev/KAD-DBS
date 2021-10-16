@@ -10,7 +10,7 @@ import FormContainer from '../../../components/UI/FormContainer'
 import Loader from '../../../components/UI/Loader'
 import Message from '../../../components/UI/Message'
 
-const JobOperation = () => {
+const JobOperation = ({ userDetails }) => {
 	let timedResponse
 	const history = useHistory()
 
@@ -28,13 +28,14 @@ const JobOperation = () => {
 	}, [jobNumber])
 
 	useEffect(() => {
-		if (!localStorage.getItem('token')) {
+		if (userDetails && !userDetails.isAdmin) {
 			history.push('/')
 		}
 		return () => {
 			clearTimeout(timedResponse)
 		}
-	}, [history, timedResponse])
+		// eslint-disable-next-line
+	}, [userDetails])
 
 	const deleteJob = async () => {
 		setMessage(null)
@@ -123,6 +124,7 @@ const JobOperation = () => {
 								type='text'
 								value={jobNumber}
 								onChange={handleChange}
+								autoComplete='off'
 							/>
 							<Form.Control.Feedback type='invalid'>Please enter a valid job number</Form.Control.Feedback>
 						</Form.Group>

@@ -497,7 +497,7 @@ export const deleteJob = expressAsyncHandler(async (req, res) => {
 				},
 			},
 		])
-		if (!existingJobDetails?.length) {
+		if (existingJobDetails && !existingJobDetails.length) {
 			res.status(400)
 			throw new Error("Job Number doesn't exist")
 		} else {

@@ -68,6 +68,7 @@ const Results = () => {
 							</tbody>
 						</Table>
 					</div>
+					<p className='text-info'>Number of Jobs: {details.result.length}</p>
 					<Paginator totalCount={details.result.length} itemsPerPage={10} setSkip={setSkip} />
 				</>
 			)}

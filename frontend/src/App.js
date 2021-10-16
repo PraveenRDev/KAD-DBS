@@ -1,19 +1,21 @@
 import { useEffect } from 'react'
 import './App.css'
 import axios from 'axios'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import Login from './screens/users/login'
 import Jobs from './screens/jobs'
 import Header from './components/header'
 import Job from './screens/jobs/create-job'
 import JobOperation from './screens/jobs/job-operation'
 import { clearUser, loginSuccess } from './+store/userSlice'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Register from './screens/users/register'
+import NotFound from './screens/notFound'
 
 function App() {
 	const dispatch = useDispatch()
-
+	const userLogin = useSelector((state) => state.user)
+	const { details } = userLogin
 	useEffect(() => {
 		if (localStorage.getItem('token')) {
 			const config = {
@@ -42,14 +44,16 @@ function App() {
 	return (
 		<>
 			<Router>
-				<Header />
+				<Header userDetails={details} />
 				<main className='py-5'>
-					<Route path='/' exact component={Login} />
-					<Route path='/job/:jobId?' exact component={Job} />
-					<Route path='/job-operation' exact component={JobOperation} />
-					<Route path='/jobs' exact component={Jobs} />
-					{/* <Route path='/user/:userId?' exact component={Register} /> */}
-					{/* <Route path='/users' exact component={ListUsers} /> */}
+					<Switch>
+						<Route path='/' exact component={Login} />
+						<Route path='/job/:jobId?' exact component={Job} />
+						<Route path='/job-operation' component={() => <JobOperation userDetails={details} />} />
+						<Route path='/jobs' exact component={Jobs} />
+						<Route path='/user' exact component={() => <Register userDetails={details} />} />
+						<Route exact component={NotFound} />
+					</Switch>
 				</main>
 			</Router>
 		</>

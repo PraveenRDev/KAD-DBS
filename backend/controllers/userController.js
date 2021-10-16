@@ -62,37 +62,37 @@ export const registerUser = asyncHandler(async (req, res) => {
 // @desc    Register a new user
 // @route   POST /api/users
 // @access  Public
-export const listUsers = asyncHandler(async (req, res) => {
-	const allUsers = await User.find({}, { username: 1, isAdmin: 1 })
+// export const listUsers = asyncHandler(async (req, res) => {
+// 	const allUsers = await User.find({}, { username: 1, isAdmin: 1 })
 
-	if (!allUsers?.length) {
-		res.status(400)
-		throw new Error('No Users Found')
-	}
+// 	if (allUsers?.length) {
+// 		res.status(400)
+// 		throw new Error('No Users Found')
+// 	}
 
-	if (allUsers?.length) {
-		res.status(200).json(allUsers)
-	} else {
-		res.status(400)
-		throw new Error('Server Error while getting users')
-	}
-})
+// 	if (allUsers?.length) {
+// 		res.status(200).json(allUsers)
+// 	} else {
+// 		res.status(400)
+// 		throw new Error('Server Error while getting users')
+// 	}
+// })
 
-export const getUserById = asyncHandler(async (req, res) => {
-	const userId = req.params.userId
-	const userInfo = await User.findOne({ _id: mongoose.Types.ObjectId(userId) })
+// export const getUserById = asyncHandler(async (req, res) => {
+// 	const userId = req.params.userId
+// 	const userInfo = await User.findOne({ _id: mongoose.Types.ObjectId(userId) })
 
-	if (!userInfo) {
-		res.status(400)
-		throw new Error('No User Found')
-	}
+// 	if (!userInfo) {
+// 		res.status(400)
+// 		throw new Error('No User Found')
+// 	}
 
-	if (userInfo) {
-		res.status(200).json({
-			username: userInfo.username,
-		})
-	} else {
-		res.status(400)
-		throw new Error('Server Error while getting users')
-	}
-})
+// 	if (userInfo) {
+// 		res.status(200).json({
+// 			username: userInfo.username,
+// 		})
+// 	} else {
+// 		res.status(400)
+// 		throw new Error('Server Error while getting users')
+// 	}
+// })
