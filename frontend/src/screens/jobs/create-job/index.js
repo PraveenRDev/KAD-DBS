@@ -18,7 +18,7 @@ const Job = ({ match }) => {
 	const [loading, setLoading] = useState(false)
 	const [message, setMessage] = useState(null)
 	const [fields, setFields] = useState(DEFAULT_VALUE_JOB_NEW)
-	const [validations, setValidations] = useState({ client: false })
+	// const [validations, setValidations] = useState({ client: false })
 	const [isUpdate, setIsUpdate] = useState(false)
 
 	const handleTextChange = (e) =>
@@ -29,12 +29,9 @@ const Job = ({ match }) => {
 
 	const handleSave = async () => {
 		setValidated(false)
-		setValidations({ client: null })
 		setMessage(null)
-		if ((fields.clientEmail.trim() || fields.clientPhone.trim() || fields.company.trim()) && !fields.client.trim()) {
-			setValidations({ client: true })
-		}
 		if (
+			((fields.clientEmail.trim() || fields.clientPhone.trim() || fields.company.trim()) && !fields.client.trim()) ||
 			!fields.jobNumber ||
 			(fields.jobNumber && fields.jobNumber.trim() && !jobNumberValidation(fields.jobNumber)) ||
 			(fields.clientEmail && fields.clientEmail.trim() && !emailValidation(fields.clientEmail)) ||
@@ -74,7 +71,6 @@ const Job = ({ match }) => {
 	const resetAll = () => {
 		setFields(DEFAULT_VALUE_JOB_NEW)
 		setValidated(false)
-		setValidations({ client: null })
 	}
 
 	const revertAll = () => {
@@ -305,7 +301,7 @@ const Job = ({ match }) => {
 									type='text'
 									disabled={loading}
 									autoComplete='off'
-									required={validations.client ? true : false}
+									required={fields.clientEmail.trim() || fields.clientPhone.trim() || fields.company.trim()}
 									name='client'
 									value={fields.client}
 									onChange={handleTextChange}
