@@ -79,6 +79,7 @@ const Job = ({ match }) => {
 
 	useEffect(() => {
 		if (message) {
+			// eslint-disable-next-line
 			timedResponse = setTimeout(() => {
 				setMessage(null)
 			}, 1500)
