@@ -1,0 +1,22 @@
+.table-wrapper {
+	min-height: 37rem;
+}
+.results-table {
+	th {
+		text-align: center;
+	}
+	td {
+		min-width: 15rem;
+		text-align: center;
+	}
+}
+
+#react-paginate ul {
+	display: inline-block;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+#react-paginate li {
+	display: inline-block;
+}

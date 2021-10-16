@@ -14,9 +14,10 @@ const clientSchema = mongoose.Schema(
 			type: String,
 			default: null,
 		},
-		companyName: {
-			type: String,
+		companyId: {
+			type: mongoose.Schema.Types.ObjectId,
 			default: null,
+			ref: 'Company',
 		},
 	},
 	{

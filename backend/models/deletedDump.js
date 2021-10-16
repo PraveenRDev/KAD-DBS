@@ -1,19 +1,22 @@
 import mongoose from 'mongoose'
 
-const jobSchema = mongoose.Schema(
+const deletedDumpSchema = mongoose.Schema(
 	{
 		serialNumber: {
 			type: Number,
+			default: null,
 		},
 		jobNumber: {
 			type: String,
-			required: true,
-			unique: true,
+			default: null,
 		},
 		jobTypeId: {
 			type: mongoose.Schema.Types.ObjectId,
 			default: null,
-			ref: 'Client',
+		},
+		jobTypeDetails: {
+			type: Object,
+			default: null,
 		},
 		lots: {
 			type: String,
@@ -70,7 +73,18 @@ const jobSchema = mongoose.Schema(
 		clientId: {
 			type: mongoose.Schema.Types.ObjectId,
 			default: null,
-			ref: 'Client',
+		},
+		clientDetails: {
+			type: Object,
+			default: null,
+		},
+		companyId: {
+			type: mongoose.Schema.Types.ObjectId,
+			default: null,
+		},
+		companyDetails: {
+			type: Object,
+			default: null,
 		},
 		originalFileName: {
 			type: String,
@@ -98,6 +112,6 @@ const jobSchema = mongoose.Schema(
 	}
 )
 
-const Job = mongoose.model('Job', jobSchema)
+const DeletedDump = mongoose.model('DeletedDump', deletedDumpSchema)
 
-export default Job
+export default DeletedDump
