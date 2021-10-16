@@ -5,7 +5,7 @@ import { notFound, errorHandler } from './middleware/errorMiddleware.js'
 
 import userRoutes from './routes/userRoutes.js'
 import jobsRoutes from './routes/jobsRoute.js'
-import dataManagerRoutes from './routes/dataManagerRoute.js'
+// import dataManagerRoutes from './routes/dataManagerRoute.js'
 
 // config file
 dotenv.config()

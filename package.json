@@ -5,9 +5,11 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
+    "start": "node backend/server",
     "client": "npm start --prefix frontend",
     "server": "nodemon backend/server",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && npm run build --prefix frontend"
   },
   "author": "Praveen R",
   "license": "MIT",
