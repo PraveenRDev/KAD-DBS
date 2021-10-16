@@ -48,7 +48,7 @@ function App() {
 					<Route path='/job/:jobId?' exact component={Job} />
 					<Route path='/job-operation' exact component={JobOperation} />
 					<Route path='/jobs' exact component={Jobs} />
-					<Route path='/user/:userId?' exact component={Register} />
+					{/* <Route path='/user/:userId?' exact component={Register} /> */}
 					{/* <Route path='/users' exact component={ListUsers} /> */}
 				</main>
 			</Router>
