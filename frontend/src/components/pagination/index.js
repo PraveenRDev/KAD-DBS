@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Pagination } from 'react-bootstrap'
+import Pagination from 'react-bootstrap/Pagination'
 
 const Paginator = ({ totalCount, itemsPerPage, setSkip }) => {
 	const [currentPage, setCurrentPage] = useState(1)
