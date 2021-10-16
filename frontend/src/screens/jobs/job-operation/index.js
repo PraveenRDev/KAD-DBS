@@ -37,6 +37,14 @@ const JobOperation = ({ userDetails }) => {
 		// eslint-disable-next-line
 	}, [userDetails])
 
+	useEffect(() => {
+		if (message) {
+			timedResponse = setTimeout(() => {
+				setMessage(null)
+			}, 1500)
+		}
+	}, [message])
+
 	const deleteJob = async () => {
 		setMessage(null)
 		if (!validated) {
@@ -54,11 +62,6 @@ const JobOperation = ({ userDetails }) => {
 					setLoading(false)
 					setJobNumber('')
 					setMessage({ isSuccess: true, text: data.message })
-					timedResponse = setTimeout(() => {
-						if (message) {
-							setMessage(null)
-						}
-					}, 2000)
 				}
 			} catch (error) {
 				setLoading(false)

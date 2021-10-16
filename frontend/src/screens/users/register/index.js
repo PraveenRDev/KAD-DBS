@@ -9,6 +9,7 @@ import Loader from '../../../components/UI/Loader'
 import Message from '../../../components/UI/Message'
 
 const Register = ({ userDetails = null }) => {
+	let timedResponse
 	const history = useHistory()
 
 	const [loading, setLoading] = useState(false)
@@ -23,8 +24,19 @@ const Register = ({ userDetails = null }) => {
 		if (userDetails && !userDetails.isAdmin) {
 			history.push('/')
 		}
+		return () => {
+			clearTimeout(timedResponse)
+		}
 		// eslint-disable-next-line
 	}, [userDetails])
+
+	useEffect(() => {
+		if (message) {
+			timedResponse = setTimeout(() => {
+				setMessage(null)
+			}, 1500)
+		}
+	}, [message])
 
 	const submitHandler = async (e) => {
 		e.preventDefault()
@@ -40,6 +52,9 @@ const Register = ({ userDetails = null }) => {
 				const response = await axios.post('/api/users', { username, password, isAdmin }, config)
 				setLoading(false)
 				if (response) {
+					setUsername('')
+					setPassword('')
+					setIsAdmin(false)
 					setMessage({ isSuccess: true, text: 'A user has been successfully created' })
 				}
 			} catch (error) {
@@ -56,8 +71,9 @@ const Register = ({ userDetails = null }) => {
 	return (
 		<Container>
 			<FormContainer>
-				{loading && <Loader />}
 				{message && <Message variant={message.isSuccess ? 'success' : 'danger'}>{message.text}</Message>}
+
+				{loading && <Loader />}
 				<h4>Create New User</h4>
 				<br />
 				<Form noValidate validated={validated} onSubmit={submitHandler}>

@@ -54,13 +54,10 @@ const Job = ({ match }) => {
 				const postValues = isUpdate ? { jobId: match.params.jobId, fields } : { fields }
 				const { data } = await axios.post(url, postValues, config)
 				if (data) {
+					setMessage({ isSuccess: true, text: data.message })
 					setLoading(false)
 					if (isUpdate) {
 						history.push(`/job/${match.params.jobId}`)
-						setMessage({ isSuccess: true, text: data.message })
-						timedResponse = setTimeout(() => {
-							if (message) setMessage(null)
-						}, 2000)
 					} else {
 						resetAll()
 					}
@@ -78,12 +75,19 @@ const Job = ({ match }) => {
 		setFields(DEFAULT_VALUE_JOB_NEW)
 		setValidated(false)
 		setValidations({ client: null })
-		setMessage(null)
 	}
 
 	const revertAll = () => {
 		history.push(`/job/${match.params.jobId}`)
 	}
+
+	useEffect(() => {
+		if (message) {
+			timedResponse = setTimeout(() => {
+				setMessage(null)
+			}, 1500)
+		}
+	}, [message])
 
 	useEffect(() => {
 		if (!localStorage.getItem('token')) {
@@ -149,8 +153,8 @@ const Job = ({ match }) => {
 
 	return (
 		<Container>
-			{loading && <Loader />}
 			{message && <Message variant={message.isSuccess ? 'success' : 'danger'}>{message.text}</Message>}
+			{loading && <Loader />}
 			{!loading && (
 				<Form noValidate validated={validated} className='filter-name'>
 					<h4 className='mb-4'>{!isUpdate ? 'Create New Job' : 'Update Job'}</h4>
