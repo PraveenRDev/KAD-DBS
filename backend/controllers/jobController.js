@@ -4,8 +4,10 @@ import Jobs from '../models/jobModel.js'
 import Client from '../models/clientModel.js'
 import Company from '../models/companyModel.js'
 import Job from '../models/jobModel.js'
+import JobFolder from '../models/jobFolderModel.js'
+import JobFile from '../models/jobFileModel.js'
 import mongoose from 'mongoose'
-import DeletedDump from '../models/deletedDump.js'
+// import DeletedDump from '../models/deletedDump.js'
 
 // @desc    Get job types
 // @route   GET /api/jobs/jobTypes
@@ -211,6 +213,8 @@ export const filterResults = expressAsyncHandler(async (req, res) => {
 							project: 1,
 							clientName: 1,
 							companyName: 1,
+							directoryId: 1,
+							directoryPermission: 1,
 						},
 				  }
 		const result = await Job.aggregate([
@@ -258,6 +262,14 @@ export const filterResults = expressAsyncHandler(async (req, res) => {
 				},
 			},
 			{
+				$lookup: {
+					from: 'jobfolders',
+					localField: '_id',
+					foreignField: 'jobId',
+					as: 'jobsDirectory',
+				},
+			},
+			{
 				$project: {
 					jobNumber: 1,
 					jobTypeId: 1,
@@ -281,6 +293,8 @@ export const filterResults = expressAsyncHandler(async (req, res) => {
 					clientName: { $ifNull: ['$clientDetails.clientName', ''] },
 					companyId: { $ifNull: ['$companyDetails._id', ''] },
 					companyName: { $ifNull: ['$companyDetails.companyName', ''] },
+					directoryId: { $first: '$jobsDirectory._id' },
+					directoryPermission: { $first: '$jobsDirectory.accessPermission' },
 				},
 			},
 			{
@@ -435,6 +449,22 @@ export const createJob = expressAsyncHandler(async (req, res) => {
 		})
 
 		if (newJob) {
+			const jobParentFolder = await JobFolder.create({
+				jobId: newJob._id,
+				name: newJob.jobNumber,
+				parentFolderId: null,
+				path: [],
+				createdBy: req.user._id,
+			})
+			;['DRAWING', 'SEARCH', 'SURVEY DATA'].forEach(async (commonFolder) => {
+				await JobFolder.create({
+					jobId: newJob._id,
+					name: commonFolder,
+					parentFolderId: jobParentFolder._id,
+					path: [{ folderName: jobParentFolder.name, folderId: jobParentFolder._id }],
+					createdBy: req.user._id,
+				})
+			})
 			res.status(200).json({
 				message: 'A New Job has been created successfully',
 				createdJob: newJob._id,
@@ -503,34 +533,50 @@ export const deleteJob = expressAsyncHandler(async (req, res) => {
 		} else {
 			const existingJob = existingJobDetails[0]
 
-			if (existingJob.companyDetails) {
-				const companyCount = await Client.find({ companyId: existingJob.companyDetails._id }).count()
-				if (companyCount === 1) {
-					// delete company
-					await Company.deleteOne({ _id: existingJob.companyDetails._id })
-				}
-			}
+			// if (existingJob.companyDetails) {
+			// 	const companyCount = await Client.find({ companyId: existingJob.companyDetails._id }).count()
+			// 	if (companyCount === 1) {
+			// 		// delete company
+			// 		await Company.deleteOne({ _id: existingJob.companyDetails._id })
+			// 	}
+			// }
 
-			if (existingJob.clientDetails) {
-				const clientCount = await Job.find({ clientId: existingJob.clientDetails._id }).count()
-				if (clientCount === 1) {
-					// delete client
-					await Client.deleteOne({ _id: existingJob.clientDetails._id })
-				}
-			}
+			// if (existingJob.clientDetails) {
+			// 	const clientCount = await Job.find({ clientId: existingJob.clientDetails._id }).count()
+			// 	if (clientCount === 1) {
+			// 		// delete client
+			// 		await Client.deleteOne({ _id: existingJob.clientDetails._id })
+			// 	}
+			// }
 
-			if (existingJob.jobTypeDetails) {
-				const jobTypeCount = await Job.find({ jobTypeId: existingJob.jobTypeDetails._id }).count()
-				if (jobTypeCount === 1) {
-					// delete jobType
-					await JobType.deleteOne({ _id: existingJob.jobTypeDetails._id })
-				}
-			}
+			// if (existingJob.jobTypeDetails) {
+			// 	const jobTypeCount = await Job.find({ jobTypeId: existingJob.jobTypeDetails._id }).count()
+			// 	if (jobTypeCount === 1) {
+			// 		// delete jobType
+			// 		await JobType.deleteOne({ _id: existingJob.jobTypeDetails._id })
+			// 	}
+			// }
 
-			await DeletedDump.create(existingJob)
+			// await DeletedDump.create(existingJob)
 
 			const response = await Job.deleteOne({ _id: existingJob._id })
+			const foldersDelete = await JobFolder.aggregate([
+				{ $match: { jobId: existingJob._id } },
+				{
+					$group: {
+						_id: null,
+						folderIds: { $push: '$_id' },
+					},
+				},
+				{
+					$project: { folderIds: 1, _id: 0 },
+				},
+			])
 
+			if (foldersDelete && foldersDelete.length > 0 && foldersDelete[0].folderIds && foldersDelete[0].folderIds.length > 0) {
+				await JobFolder.deleteMany({ _id: { $in: foldersDelete[0].folderIds } })
+				await JobFile.deleteMany({ folderId: { $in: foldersDelete[0].folderIds } })
+			}
 			res.status(200).json({
 				message: 'Job is successfully deleted',
 				deletedJob: response,
@@ -610,6 +656,14 @@ export const getJobByJobId = expressAsyncHandler(async (req, res) => {
 				},
 			},
 			{
+				$lookup: {
+					from: 'jobfolders',
+					localField: '_id',
+					foreignField: 'jobId',
+					as: 'jobsDirectory',
+				},
+			},
+			{
 				$project: {
 					jobNumber: 1,
 					jobTypeId: 1,
@@ -637,6 +691,7 @@ export const getJobByJobId = expressAsyncHandler(async (req, res) => {
 					clientEmail: { $ifNull: ['$clientDetails.email', ''] },
 					companyId: { $ifNull: ['$companyDetails._id', ''] },
 					companyName: { $ifNull: ['$companyDetails.companyName', ''] },
+					directoryId: { $first: '$jobsDirectory._id' },
 				},
 			},
 		])

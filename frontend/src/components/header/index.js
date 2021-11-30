@@ -32,6 +32,9 @@ const Header = ({ userDetails = null }) => {
 								<LinkContainer to='/jobs'>
 									<Nav.Link>All Jobs</Nav.Link>
 								</LinkContainer>
+								<LinkContainer to='/jobs-directory'>
+									<Nav.Link>Jobs Directory</Nav.Link>
+								</LinkContainer>
 								{!userDetails.isAdmin && (
 									<LinkContainer to='/job'>
 										<Nav.Link>Create New Job</Nav.Link>

@@ -5,6 +5,7 @@ import { notFound, errorHandler } from './middleware/errormiddleware.js'
 import path from 'path'
 import userRoutes from './routes/userRoutes.js'
 import jobsRoutes from './routes/jobsRoute.js'
+import jobDirectory from './routes/jobDirectory.js'
 // import dataManagerRoutes from './routes/dataManagerRoute.js'
 
 // config file
@@ -21,6 +22,7 @@ app.use(express.json())
 app.use('/api/users', userRoutes)
 // app.use('/api/dm', dataManagerRoutes)
 app.use('/api/jobs', jobsRoutes)
+app.use('/api/jobDirectory', jobDirectory)
 
 const __dirname = path.resolve()
 if (process.env.NODE_ENV === 'production') {

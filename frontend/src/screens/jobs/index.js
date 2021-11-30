@@ -4,7 +4,7 @@ import Accordion from 'react-bootstrap/Accordion'
 import Filter from '../../components/filter'
 import Results from '../../components/results'
 
-const Jobs = () => {
+const Jobs = ({ userDetails }) => {
 	return (
 		<>
 			<Container>
@@ -18,7 +18,7 @@ const Jobs = () => {
 				</Accordion>
 			</Container>
 			<Container fluid className='px-4'>
-				<Results />
+				<Results isAdmin={userDetails && userDetails.isAdmin} />
 			</Container>
 		</>
 	)

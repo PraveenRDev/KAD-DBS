@@ -165,7 +165,7 @@ const Job = ({ match }) => {
 									pattern='[0-9]{4}-[0-9]{3}'
 									size='md'
 									type='text'
-									disabled={loading}
+									disabled={loading || isUpdate}
 									autoComplete='off'
 									name='jobNumber'
 									value={fields.jobNumber}

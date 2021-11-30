@@ -11,6 +11,9 @@ import { clearUser, loginSuccess } from './+store/userSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import Register from './screens/users/register'
 import NotFound from './screens/notFound'
+import JobDirectoryDashboard from './screens/jobDirectory/Dashboard'
+import JobDirectory from './screens/jobDirectory'
+// import JobDirectory from './screens/jobDirectory_1'
 
 function App() {
 	const dispatch = useDispatch()
@@ -50,8 +53,12 @@ function App() {
 						<Route path='/' exact component={Login} />
 						<Route path='/job/:jobId?' exact component={Job} />
 						<Route path='/job-operation' component={() => <JobOperation userDetails={details} />} />
-						<Route path='/jobs' exact component={Jobs} />
+						<Route path='/jobs' exact component={() => <Jobs userDetails={details} />} />
 						<Route path='/user' exact component={() => <Register userDetails={details} />} />
+
+						{/* Job Directory */}
+						<Route path='/jobs-directory' exact component={() => <JobDirectoryDashboard userDetails={JobDirectoryDashboard} />} />
+						<Route path='/job-directory/:folderId' exact component={() => <JobDirectory userDetails={details} />} />
 						<Route exact component={NotFound} />
 					</Switch>
 				</main>

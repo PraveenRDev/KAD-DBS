@@ -7,8 +7,10 @@ import Loader from '../UI/Loader'
 import Message from '../UI/Message'
 import { Link } from 'react-router-dom'
 import './style.scss'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEdit } from '@fortawesome/free-solid-svg-icons'
 
-const Results = () => {
+const Results = ({ isAdmin = false }) => {
 	const results = useSelector((state) => state.result)
 	const dispatch = useDispatch()
 	const { loading, error, details } = results
@@ -40,7 +42,14 @@ const Results = () => {
 									<tr key={data._id}>
 										{details.columnNames.includes('Job Number') && (
 											<td>
-												<Link to={`job/${data._id}`} target='_blank'>
+												<Link to={`job/${data._id}`}>
+													<FontAwesomeIcon icon={faEdit} className='me-2 text-info' />
+												</Link>
+												<Link
+													style={isAdmin || (!isAdmin && data.directoryPermission === 2) ? null : { pointerEvents: 'none' }}
+													to={isAdmin || (!isAdmin && data.directoryPermission === 2) ? `job-directory/${data.directoryId}` : '#'}
+													target='_blank'
+												>
 													{data.jobNumber}
 												</Link>
 											</td>
