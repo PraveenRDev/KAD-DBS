@@ -4,7 +4,7 @@ import aws from 'aws-sdk'
 dotenv.config()
 
 const region = 'ca-central-1'
-const bucketName = 'kad-lanka-files'
+const bucketName = process.env.S3_BUCKET
 const accessKeyId = process.env.AWS_ACCESS_KEY_ID
 const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY
 const awsExpiry = Number(process.env.AWS_EXPIRY)

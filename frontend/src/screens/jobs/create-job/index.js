@@ -56,6 +56,7 @@ const Job = ({ match }) => {
 					if (isUpdate) {
 						history.push(`/job/${match.params.jobId}`)
 					} else {
+						history.push(`/job-directory/${data.createdJob}`)
 						resetAll()
 					}
 				}

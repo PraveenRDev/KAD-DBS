@@ -467,7 +467,7 @@ export const createJob = expressAsyncHandler(async (req, res) => {
 			})
 			res.status(200).json({
 				message: 'A New Job has been created successfully',
-				createdJob: newJob._id,
+				createdJob: jobParentFolder._id,
 			})
 		} else {
 			res.status(400)
